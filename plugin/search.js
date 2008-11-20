@@ -33,6 +33,7 @@ commands.add(["search"],
         for each (input in form.elements){
           if (input.name == 'q'){
             value = input.value;
+            break;
           }
         }
       }else if (defsearch == 'yahoo'){
