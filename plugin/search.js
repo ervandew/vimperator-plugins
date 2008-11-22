@@ -45,7 +45,7 @@ commands.add(["search"],
       }
       liberator.echoerr(
         ":search currently only supports the following defsearch engines: " +
-          engines.join(", "));
+        engines.join(", "));
       return;
     }
 
@@ -135,8 +135,7 @@ const emailDomains = {
         var input = window.content.document.getElementById('_test_search_input');
         var event = window.content.document.createEvent('KeyboardEvent');
         event.initKeyEvent(
-          "keydown", true, true, null,
-          false, false, false, false, 13, 0);
+          "keydown", true, true, null, false, false, false, false, 13, 0);
         input.focus();
         input.value = query;
         input.dispatchEvent(event);
