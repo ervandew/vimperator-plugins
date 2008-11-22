@@ -14,7 +14,7 @@
  *   :[count]firebug tabprevious  focuses the prev firebug tab (wraps at the
  *                                begining).
  *
- * @author Eric Van Dewoetine
+ * @author Eric Van Dewoetine (ervandew@gmail.com)
  * @version 0.1
  */
 
