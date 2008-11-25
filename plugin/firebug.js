@@ -184,7 +184,7 @@ function FirebugVimperator(){
       fbv.tab({arguments: [names[index]]});
     },
 
-    _completer: function(filter){
+    _completer: function(context){
       var commands = [];
       for (var name in fbv){
         if (name.indexOf('_') !== 0 && fbv.hasOwnProperty(name)){
@@ -192,7 +192,7 @@ function FirebugVimperator(){
         }
       }
       commands = [[c, ''] for each (c in commands)];
-      return [0, completion.filter(commands, filter)];
+      return [0, completion.filter(commands, context.filter)];
     }
   };
 }
