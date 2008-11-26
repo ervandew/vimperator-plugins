@@ -1,28 +1,35 @@
-// Integration plugin for noscript extension
-// @author Martin Stubenschrott
-// @contributor Eric Van Dewoestine
-// @version 0.3
-//
-// Usage:
-//   :noscript info        Shows noscript info for the current page.
-//   :noscript popup       Opens the noscript popup.
-//   :noscript toggletemp  Toggles scripts temporarily on current page.
-//   :noscript toggleperm  Toggles scripts permanently on current page.
-//
-// Note: when the noscript popup is open, you can scroll through the items
-// using the following standard vimperator key bindings:
-//   j  move down one
-//   k  move up one
-//   l  open the sub-menu
-//   h  close the sub-menu
-//   g  jump to the first item in the menu
-//   G  jump to the last item in the menu
-//
-// Tested against NoScript 1.8.6
+/**
+ * Integration plugin for noscript extension
+ *
+ * Usage:
+ *   :noscript info        Shows noscript info for the current page.
+ *   :noscript popup       Opens the noscript popup.
+ *   :noscript toggletemp  Toggles scripts temporarily on current page.
+ *   :noscript toggleperm  Toggles scripts permanently on current page.
+ *
+ * Note: when the noscript popup is open, you can scroll through the items
+ * using the following standard vimperator key bindings:
+ *   j  move down one
+ *   k  move up one
+ *   l  open the sub-menu
+ *   h  close the sub-menu
+ *   g  jump to the first item in the menu
+ *   G  jump to the last item in the menu
+ * For implementation simplicity, only single character bindings are supported,
+ * so you cannot supply counts to any of the above.
+ *
+ * Tested against NoScript 1.8.6
+ *
+ * @author Eric Van Dewoestine (ervandew@gmail.com)
+ * @version 0.3
+ *
+ * First two versions written by Martin Stubenschrott, but now maintained by
+ * Eric.  Please direct all correspondence regarding this plugin to Eric.
+ */
 
 /**
- * Class which contains supporte noscript commands and hooks into the noscript
- * popup to provide vimperator scrolling bindings (j,k,l,h,g,G).
+ * Class which provides support for noscript commands and hooks into the
+ * noscript popup to provide vimperator scrolling bindings (j,k,l,h,g,G).
  *
  * Note: There appears to be a bug in firefox's menupopup key bindings, where
  * if you navigate to a sub popup (l or right arrow), and navigate back to the
@@ -105,8 +112,7 @@ function NoscriptVimperator() {
     },
 
     _execute: function(args){
-      var name = args.arguments.length ?
-        args.arguments.shift().replace('-', '_') : 'open';
+      var name = args.arguments.shift();
       var cmd = nsv[name];
       if (!cmd){
         liberator.echoerr('Unsupported noscript command: ' + name);
