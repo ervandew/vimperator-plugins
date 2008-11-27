@@ -14,14 +14,29 @@
  *   :[count]firebug tabprevious  focuses the prev firebug tab (wraps at the
  *                                begining).
  *
+ * The following vimpartor key bindings are supported while the firebug panel
+ * has focus, meaning that they will perform the expected action on the firebug
+ * panel instead of the current web page.
+ *   - scrolling:         j, k, gg, G
+ *   - tab switching:     gt, gT, g0, g$
+ *
  * Note: the wincmd plugin[1] supports navigating to/from firebug panels like
- * regular html frames, given them focus for then navigating using the usual
- * vim like key bindings.
+ * regular html frames, giving them focus for allowing you to then navigate via
+ * the supported vimperator key bindings noted above.
  *
  * [1] http://vimperator.org/trac/ticket/56
  *
  * @author Eric Van Dewoetine (ervandew@gmail.com)
  * @version 0.2
+ *
+ * TODO:
+ *   - add horizontal scrolling: h,l,0,$
+ *   - add <c-d>, <c-u>, <c-b>, <c-f> scrolling support
+ *     - buffer.js:buffer.scrollByScrollSize
+ *     - buffer.js:buffer.scrollPages
+ *   - modify scrolling in panels to scroll down by focussing entries in the
+ *     page.
+ *   - for expandable/collapsable elements, add zo, zc to treat them like folds
  */
 
 function FirebugVimperator(){
@@ -35,6 +50,8 @@ function FirebugVimperator(){
       doc = event.target;
     }else if (event.target.ownerPanel){
       doc = event.target.ownerPanel.document;
+    }else if (event.target.parentNode.ownerPanel){ // script panel
+      doc = event.target.parentNode.ownerPanel.document;
     }
 
     if (doc.location == 'chrome://firebug/content/panel.html'){
@@ -79,6 +96,9 @@ function FirebugVimperator(){
   buffer.scrollLines = function(lines){
     if (panelFocused){
       var node = FirebugContext.getPanel(panelFocused, true).panelNode;
+      if (panelFocused == 'script'){
+        node = node.lastChild;
+      }
       node.scrollTop += 10 * lines;
     }else{
       bufferScrollLines(lines);
@@ -89,9 +109,49 @@ function FirebugVimperator(){
   buffer.scrollToPercentile = function(percentage){
     if (panelFocused){
       var node = FirebugContext.getPanel(panelFocused, true).panelNode;
+      if (panelFocused == 'script'){
+        node = node.lastChild;
+      }
       node.scrollTop = node.scrollHeight * (percentage / 100);
     }else{
       bufferScrollToPercentile(percentage);
+    }
+  };
+
+  // hook into tab switching
+  var tabsSelect = tabs.select;
+  tabs.select = function(spec, wrap){
+    if (panelFocused){
+      if (spec !== undefined && spec !== ""){
+        var names = fbv._getPanelNames();
+        var browser = FirebugChrome.getCurrentBrowser();
+        var position = names.indexOf(panelFocused);
+        var focus = fbv._focusPanel;
+        if (position == -1){
+          names = fbv._getSidePanelNames(browser.chrome.getSelectedPanel());
+          position = names.indexOf(panelFocused);
+          focus = fbv._focusSidePanel;
+        }
+        var last = names.length - 1;
+        var length = names.length;
+
+        if (typeof spec === "number")
+          position = spec;
+        else if (spec === "$")
+          position = last;
+        else if (/^[+-]\d+$/.test(spec))
+          position += parseInt(spec, 10);
+        else if (/^\d+$/.test(spec))
+          position = parseInt(spec, 10);
+
+        if (position > last)
+          position = wrap ? position % length : last;
+        else if (position < 0)
+          position = wrap ? (position % length) + length : 0;
+        focus(names[position]);
+      }
+    }else{
+      tabsSelect(spec, wrap);
     }
   };
 
@@ -114,7 +174,6 @@ function FirebugVimperator(){
     },
 
     toggle: function(){
-      //Firebug.toggleBar(undefined, 'console');
       if (fbContentBox.collapsed)
         fbv.open();
       else
@@ -135,11 +194,7 @@ function FirebugVimperator(){
       if (name == 'css'){
         name = 'stylesheet';
       }
-      var browser = FirebugChrome.getCurrentBrowser();
-      browser.chrome.selectPanel(name);
-      browser.chrome.syncPanel();
-      Firebug.showBar(true);
-      FirebugContext.getPanel(name, true).panelNode.focus();
+      fbv._focusPanel(name);
     },
 
     tabnext: function(args, count){
@@ -163,10 +218,7 @@ function FirebugVimperator(){
     },
 
     _gotoNextPrevTabName: function(count, previous){
-      var panels = Firebug.getMainPanelTypes(FirebugContext);
-      var names = [];
-      panels.forEach(function(panel){names.push(panel.prototype.name);});
-
+      var names = fbv._getPanelNames();
       var browser = FirebugChrome.getCurrentBrowser();
       var index = names.indexOf(browser.chrome.getSelectedPanel().name);
       count = count % names.length;
@@ -182,6 +234,39 @@ function FirebugVimperator(){
         }
       }
       fbv.tab({arguments: [names[index]]});
+    },
+
+    _getPanelNames: function(){
+      var panels = Firebug.getMainPanelTypes(FirebugContext);
+      return [p.prototype.name for each (p in panels)];
+    },
+
+    _getSidePanelNames: function(mainPanel){
+      var panels = Firebug.getSidePanelTypes(FirebugContext, mainPanel);
+      return [p.prototype.name for each (p in panels)];
+    },
+
+    _focusPanel: function(name){
+      var browser = FirebugChrome.getCurrentBrowser();
+      browser.chrome.selectPanel(name);
+      browser.chrome.syncPanel();
+      Firebug.showBar(true);
+      var panel = FirebugContext.getPanel(name, true);
+      if (name == 'script'){
+        panel.panelNode.lastChild.focus();
+      }else{
+        panel.panelNode.focus();
+      }
+      panelFocused = name;
+    },
+
+    _focusSidePanel: function(name){
+      var browser = FirebugChrome.getCurrentBrowser();
+      browser.chrome.selectSidePanel(name);
+      browser.chrome.syncPanel();
+      Firebug.showBar(true);
+      browser.chrome.getSelectedSidePanel().document.defaultView.focus();
+      panelFocused = name;
     },
 
     _completer: function(context){
