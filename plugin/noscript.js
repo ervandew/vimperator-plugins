@@ -112,7 +112,7 @@ function NoscriptVimperator() {
     },
 
     _execute: function(args){
-      var name = args.arguments.shift();
+      var name = args.shift();
       var cmd = nsv[name];
       if (!cmd){
         liberator.echoerr('Unsupported noscript command: ' + name);
@@ -128,8 +128,7 @@ function NoscriptVimperator() {
           commands.push(name);
         }
       }
-      commands = [[c, ''] for each (c in commands)];
-      return [0, completion.filter(commands, context.filter)];
+      context.completions = [[c, ''] for each (c in commands)];
     }
   };
 }
