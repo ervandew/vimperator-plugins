@@ -17,7 +17,7 @@
  * The following vimpartor key bindings are supported while the firebug panel
  * has focus, meaning that they will perform the expected action on the firebug
  * panel instead of the current web page.
- *   - scrolling:         j, k, gg, G
+ *   - scrolling:         j, k, gg, G, <c-d>, <c-u>, <c-f>, <c-b>
  *   - tab switching:     gt, gT, g0, g$
  *
  * Note: the wincmd plugin[1] supports navigating to/from firebug panels like
@@ -31,9 +31,6 @@
  *
  * TODO:
  *   - add horizontal scrolling: h,l,0,$
- *   - add <c-d>, <c-u>, <c-b>, <c-f> scrolling support
- *     - buffer.js:buffer.scrollByScrollSize
- *     - buffer.js:buffer.scrollPages
  *   - modify scrolling in panels to scroll down by focussing entries in the
  *     page.
  *   - for expandable/collapsable elements, add zo, zc to treat them like folds
@@ -91,14 +88,19 @@ function FirebugVimperator(){
     true
   );
 
+  function getPanelNode(name){
+    var node = FirebugContext.getPanel(panelFocused, true).panelNode;
+    if (panelFocused == 'script'){
+      node = node.lastChild;
+    }
+    return node;
+  }
+
   // hook into buffer scrolling to support scrolling in firebug panels
   var bufferScrollLines = buffer.scrollLines;
   buffer.scrollLines = function(lines){
     if (panelFocused){
-      var node = FirebugContext.getPanel(panelFocused, true).panelNode;
-      if (panelFocused == 'script'){
-        node = node.lastChild;
-      }
+      var node = getPanelNode(panelFocused);
       node.scrollTop += 10 * lines;
     }else{
       bufferScrollLines(lines);
@@ -108,13 +110,34 @@ function FirebugVimperator(){
   var bufferScrollToPercentile = buffer.scrollToPercentile;
   buffer.scrollToPercentile = function(percentage){
     if (panelFocused){
-      var node = FirebugContext.getPanel(panelFocused, true).panelNode;
-      if (panelFocused == 'script'){
-        node = node.lastChild;
-      }
+      var node = getPanelNode(panelFocused);
       node.scrollTop = node.scrollHeight * (percentage / 100);
     }else{
       bufferScrollToPercentile(percentage);
+    }
+  };
+
+  var bufferScrollByScrollSize = buffer.scrollByScrollSize;
+  buffer.scrollByScrollSize = function(count, direction){
+    if (panelFocused){
+      if (options["scroll"] > 0){
+        bufferScrollLines(options["scroll"] * direction);
+      }else{ // scroll half a page down in pixels
+        var node = getPanelNode(panelFocused);
+        node.scrollTop += node.clientHeight / 2 * direction;
+      }
+    }else{
+      bufferScrollByScrollSize(count, direction);
+    }
+  };
+
+  var bufferScrollPages = buffer.scrollPages;
+  buffer.scrollPages = function(pages){
+    if (panelFocused){
+      var node = getPanelNode(panelFocused);
+      node.scrollTop += (node.clientHeight - 20) * pages;
+    }else{
+      bufferScrollPages(pages);
     }
   };
 
@@ -190,7 +213,7 @@ function FirebugVimperator(){
 
     tab: function(args){
       fbv.open();
-      var name = args.arguments[0].toLowerCase();
+      var name = args[0].toLowerCase();
       if (name == 'css'){
         name = 'stylesheet';
       }
@@ -198,23 +221,23 @@ function FirebugVimperator(){
     },
 
     tabnext: function(args, count){
+      fbv.open();
       fbv._gotoNextPrevTabName(count, false);
     },
 
     tabprevious: function(args, count){
+      fbv.open();
       fbv._gotoNextPrevTabName(count, true);
     },
 
-    _execute: function(args, count){
-      var name = args.arguments.length ?
-        args.arguments.shift().replace('-', '_') : 'open';
+    _execute: function(args){
+      var name = args.length ? args.shift().replace('-', '_') : 'open';
       var cmd = fbv[name];
       if (!cmd){
         liberator.echoerr('Unsupported firebug command: ' + name);
         return false;
       }
-      count = count > 1 ? count : 1;
-      return cmd(args, count);
+      return cmd(args, args.count > 1 ? args.count : 1);
     },
 
     _gotoNextPrevTabName: function(count, previous){
@@ -233,7 +256,7 @@ function FirebugVimperator(){
           index -= names.length;
         }
       }
-      fbv.tab({arguments: [names[index]]});
+      fbv.tab([names[index]]);
     },
 
     _getPanelNames: function(){
@@ -276,8 +299,7 @@ function FirebugVimperator(){
           commands.push(name.replace('_', '-'));
         }
       }
-      commands = [[c, ''] for each (c in commands)];
-      return [0, completion.filter(commands, context.filter)];
+      context.completions = [[c, ''] for each (c in commands)];
     }
   };
 }
@@ -286,6 +308,6 @@ var fbv = new FirebugVimperator();
 
 commands.add(['firebug'],
   'Control firebug from within vimperator.',
-  function(args, special, count, modifiers) { fbv._execute(args, count); },
+  function(args) { fbv._execute(args); },
   { count: true, argCount: '*', completer: fbv._completer }
 );
