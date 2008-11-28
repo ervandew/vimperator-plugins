@@ -12,12 +12,12 @@
  *                                html, css, etc)
  *   :[count]firebug tabnext      focuses the next firebug tab (wraps at the end).
  *   :[count]firebug tabprevious  focuses the prev firebug tab (wraps at the
- *                                begining).
+ *                                beginning).
  *
  * The following vimpartor key bindings are supported while the firebug panel
  * has focus, meaning that they will perform the expected action on the firebug
  * panel instead of the current web page.
- *   - scrolling:         j, k, gg, G, <c-d>, <c-u>, <c-f>, <c-b>
+ *   - scrolling:         j, k, h, l, gg, G, 0, $, <c-d>, <c-u>, <c-f>, <c-b>
  *   - tab switching:     gt, gT, g0, g$
  *
  * Note: the wincmd plugin[1] supports navigating to/from firebug panels like
@@ -30,10 +30,10 @@
  * @version 0.2
  *
  * TODO:
- *   - add horizontal scrolling: h,l,0,$
  *   - modify scrolling in panels to scroll down by focussing entries in the
  *     page.
- *   - for expandable/collapsable elements, add zo, zc to treat them like folds
+ *   - for expandable/collapsible elements, add zo, zc to treat them like folds.
+ *   - add ability to simulate a right click, and then j,k scroll items.
  */
 
 function FirebugVimperator(){
@@ -138,6 +138,36 @@ function FirebugVimperator(){
       node.scrollTop += (node.clientHeight - 20) * pages;
     }else{
       bufferScrollPages(pages);
+    }
+  };
+
+  var bufferScrollColumns = buffer.scrollColumns;
+  buffer.scrollColumns = function(cols){
+    if (panelFocused){
+      var node = getPanelNode(panelFocused);
+      node.scrollLeft += 10 * cols;
+    }else{
+      bufferScrollColumns(cols);
+    }
+  };
+
+  var bufferScrollStart = buffer.scrollStart;
+  buffer.scrollStart = function(){
+    if (panelFocused){
+      var node = getPanelNode(panelFocused);
+      node.scrollLeft = 0;
+    }else{
+      bufferScrollStart();
+    }
+  };
+
+  var bufferScrollEnd = buffer.scrollEnd;
+  buffer.scrollEnd = function(){
+    if (panelFocused){
+      var node = getPanelNode(panelFocused);
+      node.scrollLeft = node.scrollHeight;
+    }else{
+      bufferScrollEnd();
     }
   };
 
