@@ -21,7 +21,7 @@
  * Tested against NoScript 1.8.6
  *
  * @author Eric Van Dewoestine (ervandew@gmail.com)
- * @version 0.3
+ * @version 0.4
  *
  * First two versions written by Martin Stubenschrott, but now maintained by
  * Eric.  Please direct all correspondence regarding this plugin to Eric.
