@@ -1,14 +1,17 @@
 /**
- * Plugin to search the current domain using your default search engine
- * (currently supports google and yahoo).  Also supports searching from your
- * web mail account (currently limited to gmail and yahoo mail).
+ * Plugin which will use your default search engine (:h defsearch) to search
+ * the domain you are currently browsing.  Also supports searching from your
+ * web mail account.
  *
  * Usage:
  *   :search <search terms>
  *
- * Note: when on your default search engine's search results page, the search
- * command will attempt to determine the domain to search by examining the
- * current search query.
+ * Note:
+ *   - defsearch values currently supported are 'google' and 'yahoo'.
+ *   - mail clients currently supported include gmail and yahoo mail.
+ *   - when on your default search engine's search results page, the search
+ *     command will attempt to determine the domain to search by examining the
+ *     current search query.
  *
  * Example mapping similar to 'o' or 't' to start the search command by typing
  * 's' in normal mode:
