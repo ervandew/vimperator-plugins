@@ -23,7 +23,7 @@
  */
 
 commands.add(["search"],
-  "Search the current site using a search engine.",
+  "Search the current site using your default search engine.",
   function(args) {
     var loc = window.content.document.location.toString();
     var domain = loc.replace(/[a-z]+:\/\/(.*?)\/.*/, '$1');
