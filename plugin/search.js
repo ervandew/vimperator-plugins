@@ -58,7 +58,7 @@ commands.add(["search"],
       domain = engine.searchInputDomain() || domain;
     }
 
-    var site = engine.domainFilter ? engin.domainFilter(domain) : 'site:' + domain;
+    var site = engine.domainFilter ? engine.domainFilter(domain) : 'site:' + domain;
     events.feedkeys(
       ':open ' + defsearch + ' ' + site + ' ' + args.string + '<cr>');
   }
