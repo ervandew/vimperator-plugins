@@ -15,6 +15,11 @@
  * For implementation simplicity, only single character bindings are supported,
  * so you cannot supply counts to any of the above.
  *
+ * TODO:
+ *   - :stylish manage        open the manage popup
+ *   - :stylish edit <style>  edit the specified style (enable completion)
+ *   - enable editing via &editor
+ *
  * @author Eric Van Dewoestine (ervandew@gmail.com)
  * @version 0.1
  */
