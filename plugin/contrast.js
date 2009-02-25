@@ -116,11 +116,17 @@ function Contrast() {
   };
 }
 
-var cv = Contrast();
+var contrast = Contrast();
 
 commands.add(["contrast"],
   "Adjust the contrast of the current page.",
   function(args) {
-    cv.adjustColors(window.content.document.body, parseInt(args[0]));
+    body = window.content.document.body;
+    contrast.adjustColors(body, parseInt(args[0]));
+    for each (node in body.childNodes){
+      if (node.nodeName == "DIV"){
+        contrast.adjustColors(node, parseInt(args[0]));
+      }
+    }
   }, {argCount: 1}
 );
