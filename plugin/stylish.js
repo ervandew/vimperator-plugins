@@ -21,7 +21,7 @@
  *   - enable editing via &editor
  *
  * @author Eric Van Dewoestine (ervandew@gmail.com)
- * @version 0.1
+ * @version 0.2
  */
 
 /**
@@ -36,7 +36,10 @@
  * reproducable with or without this plugin.
  */
 function StylishVimperator() {
-  var popup = document.getElementById("stylish-status-popup");
+  var popup = document.getElementById("stylish-popup");
+  if (!popup){ // < stylish 1.0
+    popup = document.getElementById("stylish-status-popup");
+  }
 
   popup.addEventListener('popupshown', popupshown, true);
   popup.addEventListener('popuphidden', popuphidden, true);
@@ -86,17 +89,38 @@ function StylishVimperator() {
     },
 
     sidebar: function(){
-      stylishBrowserOverlay.openSidebar();
+      if (typeof(stylishBrowserOverlay) != 'undefined'){ // < stylish 1.0
+        stylishBrowserOverlay.openSidebar();
+      }else{
+        var em = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+          .getService(Components.interfaces.nsIWindowMediator)
+          .getMostRecentWindow(name);
+        if (em) {
+          em.toggleSidebar('viewStylishSidebar');
+        }
+      }
     },
 
     toggle: function(){
-      var applicableStyles = stylishBrowserOverlay.getApplicableStyles();
+      var applicableStyles;
+      if (typeof(stylishBrowserOverlay) != 'undefined'){ // < stylish 1.0
+        applicableStyles = stylishBrowserOverlay.getApplicableStyles();
+      }else{
+        applicableStyles = stylishOverlay.service.findForUrl(
+          content.location.href, false, 0, {});
+      }
+
       if (applicableStyles.length > 0) {
         for each (style in applicableStyles){
           style.enabled = !style.enabled;
+          if (typeof(StylishStyle) == 'undefined'){ // >= stylish 1.0
+            style.save();
+          }
         }
-        StylishStyle.prototype.ds.save();
-        stylishCommon.reloadManage();
+        if (typeof(StylishStyle) != 'undefined'){ // < stylish 1.0
+          StylishStyle.prototype.ds.save();
+          stylishCommon.reloadManage();
+        }
       }
     },
 
