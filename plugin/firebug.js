@@ -5,6 +5,7 @@
  *   :firebug                     opens firebug
  *   :firebug open                opens firebug
  *   :firebug close               closes firebug
+ *   :firebug off                 turns firebug off
  *   :firebug toggle              if closed, open firebug, otherwise close it.
  *   :firebug console-focus       places the cursor in the console command line.
  *   :firebug console-clear       clears the console
@@ -27,7 +28,7 @@
  * [1] http://vimperator.org/trac/ticket/56
  *
  * @author Eric Van Dewoetine (ervandew@gmail.com)
- * @version 0.2
+ * @version 0.3
  *
  * TODO:
  *   - modify scrolling in panels to scroll down by focussing entries in the
@@ -221,20 +222,34 @@ function FirebugVimperator(){
       }, 100);
     },
 
+    off: function() {
+      Firebug.closeFirebug(true);
+    },
+
     close: function(){
       if (!fbContentBox.collapsed)
         Firebug.toggleBar();
     },
 
     toggle: function(){
-      if (fbContentBox.collapsed)
+      if (fbContentBox.collapsed){
         fbv.open();
-      else
+      }else{
         fbv.close();
+      }
     },
 
     console_focus: function(){
-      Firebug.CommandLine.focus(FirebugContext);
+      if (fbContentBox.collapsed){
+        fbv.open();
+      }
+      Firebug.chrome.switchToPanel(FirebugContext, "console");
+      var commandLine = Firebug.largeCommandLine
+          ? Firebug.chrome.$("fbLargeCommandLine")
+          : Firebug.chrome.$("fbCommandLine");
+      setTimeout(function(){
+        commandLine.select();
+      }, 100);
     },
 
     console_clear: function(){
