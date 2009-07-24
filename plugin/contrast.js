@@ -83,8 +83,6 @@ function Contrast() {
   }
 
   function getProperty(element, name){
-    Firebug.Console.log(element);
-    Firebug.Console.log(name);
     var doc = window.content.document;
     var style = doc.defaultView.getComputedStyle(element, "");
     var value = style.getPropertyValue(name);
