@@ -253,7 +253,9 @@ function FirebugVimperator(){
     },
 
     console_clear: function(){
-      Firebug.Console.clear();
+      if (!fbContentBox.collapsed){
+        Firebug.Console.clear();
+      }
     },
 
     tab: function(args){
