@@ -20,7 +20,7 @@ commands.add(["readability"],
     window.content.document.location = "javascript:" +
       "(function(){" +
       "    readStyle='style-ebook';" +
-      "    readSize='size-large';" +
+      "    readSize='size-small';" +
       "    readMargin='margin-narrow';" +
       "    _readability_script=document.createElement('SCRIPT');" +
       "    _readability_script.type='text/javascript';" +
