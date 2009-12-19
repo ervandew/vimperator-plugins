@@ -1,4 +1,25 @@
 /**
+ * Copyright (c) 2008 - 2009 by Eric Van Dewoestine
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ *
  * Plugin to interact with firebug.
  *
  * Usage:
@@ -21,13 +42,10 @@
  *   - scrolling:         j, k, h, l, gg, G, 0, $, <c-d>, <c-u>, <c-f>, <c-b>
  *   - tab switching:     gt, gT, g0, g$
  *
- * Note: the wincmd plugin[1] supports navigating to/from firebug panels like
+ * Note: the wincmd plugin supports navigating to/from firebug panels like
  * regular html frames, giving them focus for allowing you to then navigate via
  * the supported vimperator key bindings noted above.
  *
- * [1] http://vimperator.org/trac/ticket/56
- *
- * @author Eric Van Dewoetine (ervandew@gmail.com)
  * @version 0.3
  *
  * TODO:
