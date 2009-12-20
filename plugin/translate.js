@@ -72,10 +72,8 @@ function Translate() {
   URL_RE = new RegExp("http://babelfish.yahoo.com/.*?trurl=([^&]*).*");
   return {
     translate: function(url, sl, tl){
-      Firebug.Console.log('## orig: ' + url);
       if (URL_RE.test(url)){
         url = url.match(URL_RE)[1];
-        Firebug.Console.log('## new: ' + url);
       }
       window.content.document.location =
         "http://babelfish.yahoo.com/translate_url?" +
