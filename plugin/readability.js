@@ -66,8 +66,11 @@ commands.add(["readability"],
       "      var overlay = document.body;" +
       "      if (overlay) {" +
       "        overlay.className = '';" +
+      "        overlay.background = '';" +
+      "        overlay.bgColor = '';" +
+      "        overlay.text = '';" +
       "        overlay.firstChild.className = '';" +
-      "        overlay.style.backgroundColor = '#999';" +
+      "        overlay.style.backgroundColor = '#bbb';" +
       "        overlay.style.color = '#333';" +
       "      }" +
       "    }, 1000);" +
