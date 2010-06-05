@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009 by Eric Van Dewoestine
+ * Copyright (c) 2009 - 2010 by Eric Van Dewoestine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,12 +27,56 @@
  *     use readability to format the current page.
  *
  * Configuration:
- *   In the command declaration below you can edit the readStyle, readSize, and
- *   readMargin variables to specify your preferred readability supported
- *   values.
+ *   The following configuration settings can be overridden in your vimperatorrc file like so:
+ *     javascript readabilityFootnotes = "true"
+ *     javascript readabilityStyle = "newspaper"
+ *     ...
+ *
+ *   readabilityFootnotes (default: false):
+ *     Whether or not to convert all links to footnotes.
+ *
+ *   readabilityStyle (default: ebook):
+ *     The display style to use.
+ *
+ *   readabilitySize (default: small):
+ *     The text size
+ *
+ *   readabilityMargin (default: narrow):
+ *     The margin size
+ *
+ *   readabilityBackground (default: #bbb):
+ *     The background color
+ *
+ *   readabilityMargin (default: #333):
+ *     The text color
  *
  * @version 0.1
  */
+
+if (typeof(readabilityFootnotes) === 'undefined'){
+  readabilityFootnotes = "false";
+}
+
+if (typeof(readabilityStyle) === 'undefined'){
+  readabilityStyle = "ebook";
+}
+
+if (typeof(readabilitySize) === 'undefined'){
+  readabilitySize = "small";
+}
+
+if (typeof(readabilityMargin) === 'undefined'){
+  readabilityMargin = "narrow";
+}
+
+if (typeof(readabilityBackground) === 'undefined'){
+  readabilityBackground = "#bbb";
+}
+
+if (typeof(readabilityColor) === 'undefined'){
+  readabilityColor = "#333";
+}
+
 commands.add(["readability"],
   "Reformat the current page for readability using arc90's Readability bookmarklet.",
   function(args) {
@@ -40,9 +84,10 @@ commands.add(["readability"],
     // document.location
     window.content.document.location = "javascript:" +
       "(function(){" +
-      "    readStyle='style-ebook';" +
-      "    readSize='size-small';" +
-      "    readMargin='margin-narrow';" +
+      "    readConvertLinksToFootnotes=" + readabilityFootnotes + ";" +
+      "    readStyle='style-" + readabilityStyle + "';" +
+      "    readSize='size-" + readabilitySize + "';" +
+      "    readMargin='margin-" + readabilityMargin + "';" +
       "    _readability_script=document.createElement('SCRIPT');" +
       "    _readability_script.type='text/javascript';" +
       "    _readability_script.src=" +
@@ -70,8 +115,8 @@ commands.add(["readability"],
       "        overlay.bgColor = '';" +
       "        overlay.text = '';" +
       "        overlay.firstChild.className = '';" +
-      "        overlay.style.backgroundColor = '#bbb';" +
-      "        overlay.style.color = '#333';" +
+      "        overlay.style.backgroundColor = '" + readabilityBackground + "';" +
+      "        overlay.style.color = '" + readabilityColor + "';" +
       "      }" +
       "    }, 1000);" +
       "})();";
