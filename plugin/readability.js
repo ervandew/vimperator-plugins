@@ -107,17 +107,16 @@ commands.add(["readability"],
       "    _readability_print_css.media='print';" +
       "    _readability_print_css.type='text/css';" +
       "    document.getElementsByTagName('head')[0].appendChild(_readability_print_css);" +
+
       "    setTimeout(function(){" +
-      "      var overlay = document.body;" +
-      "      if (overlay) {" +
-      "        overlay.className = '';" +
-      "        overlay.background = '';" +
-      "        overlay.bgColor = '';" +
-      "        overlay.text = '';" +
-      "        overlay.firstChild.className = '';" +
-      "        overlay.style.backgroundColor = '" + readabilityBackground + "';" +
-      "        overlay.style.color = '" + readabilityColor + "';" +
-      "      }" +
+      "      _readability_color=document.createElement('STYLE');" +
+      "      _readability_color.type='text/css';" +
+      "      rule=document.createTextNode('.style-" + readabilityStyle + " { " +
+      "        background-color: " + readabilityBackground + "; " +
+      "        color: " + readabilityColor + "; " +
+      "      }');" +
+      "      _readability_color.appendChild(rule);" +
+      "      document.getElementsByTagName('head')[0].appendChild(_readability_color);" +
       "    }, 1000);" +
       "})();";
   }, {argCount: 0}
