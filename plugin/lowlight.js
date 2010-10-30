@@ -47,6 +47,9 @@
  *   lowlightLinkColor (default: #5d96b7):
  *     The link/href color.
  *
+ *   lowlightLinkVisitedColor (default: #426a82):
+ *     The link/href color.
+ *
  * @version 0.1
  */
 
@@ -75,6 +78,10 @@ function LowLight() {
     lowlightLinkColor = '#5d96b7';
   }
 
+  if (typeof(lowlightLinkVisitedColor) === 'undefined'){
+    lowlightLinkVisitedColor = '#426a82';
+  }
+
   function connect(){
     var db = Components.classes['@mozilla.org/file/directory_service;1']
       .getService(Components.interfaces.nsIProperties)
@@ -98,14 +105,17 @@ function LowLight() {
         '  border-color: ' + lowlightBorder + ' !important;' +
         '  color: ' + lowlightForground + ' !important;' +
         '  text-shadow: none !important;' +
-        '}' +
+        '}\n' +
         'input, select, option, textarea {' +
         '  background: ' + lowlightInputBackground + ' !important;' +
         '  color: ' + lowlightInputForground + ' !important;' +
-        '}' +
-        'a {' +
+        '}\n' +
+        'a:link {' +
         '  color: ' + lowlightLinkColor + ' !important;' +
-        '}' +
+        '}\n' +
+        'a:visited {' +
+        '  color: ' + lowlightLinkVisitedColor + ' !important;' +
+        '}\n' +
         '.clear{' +
         '  background-color: transparent !important;' +
         '}'
