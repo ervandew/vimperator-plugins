@@ -101,10 +101,13 @@ function LowLight() {
       style.id = 'lowlight';
       var css = document.createTextNode(
         '* {' +
-        '  background: ' + lowlightBackground + ' !important;' +
+        '  background: none !important;' +
         '  border-color: ' + lowlightBorder + ' !important;' +
         '  color: ' + lowlightForground + ' !important;' +
         '  text-shadow: none !important;' +
+        '}\n' +
+        'body {' +
+        '  background: ' + lowlightBackground + ' !important;' +
         '}\n' +
         'input, select, option, textarea {' +
         '  background: ' + lowlightInputBackground + ' !important;' +
