@@ -124,7 +124,10 @@ function LowLight() {
         '}'
       );
       style.appendChild(css);
-      document.getElementsByTagName('head')[0].appendChild(style);
+      var head = document.getElementsByTagName('head');
+      if (head.length > 0){
+        head[0].appendChild(style);
+      }
     }
   }
 
@@ -191,6 +194,8 @@ function LowLight() {
           unapply();
         }
         sql.finalize()
+      }catch(e){
+        Firebug.Console.log(e);
       }finally{
         conn.close();
       }
