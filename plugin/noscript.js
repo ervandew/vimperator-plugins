@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 - 2009 by Eric Van Dewoestine
+ * Copyright (c) 2008 - 2011 by Eric Van Dewoestine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -150,10 +150,12 @@ function NoscriptVimperator() {
   };
 }
 
-var nsv = NoscriptVimperator();
+if (typeof(noscriptOverlay) != 'undefined'){
+  var nsv = NoscriptVimperator();
 
-commands.addUserCommand(["nosc[ript]"],
-  "Execute noscript commands",
-  function(args) { nsv._execute(args); },
-  { argCount: '1', completer: nsv._completer }
-);
+  commands.addUserCommand(["nosc[ript]"],
+    "Execute noscript commands",
+    function(args) { nsv._execute(args); },
+    { argCount: '1', completer: nsv._completer }
+  );
+}
