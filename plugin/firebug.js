@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 - 2009 by Eric Van Dewoestine
+ * Copyright (c) 2008 - 2011 by Eric Van Dewoestine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -62,15 +62,16 @@ function FirebugVimperator(){
   // event listener to keep track of if/which firebug panel is focused.
   window.addEventListener('focus', function(event){
     var doc = null;
-    if (event.target.nodeType == Node.DOCUMENT_NODE){
-      doc = event.target;
-    }else if (event.target.ownerPanel){
-      doc = event.target.ownerPanel.document;
-    }else if (event.target.parentNode.ownerPanel){ // script panel
-      doc = event.target.parentNode.ownerPanel.document;
+    var target = event.target;
+    if (target.nodeType == Node.DOCUMENT_NODE){
+      doc = target;
+    }else if (target.ownerPanel){
+      doc = target.ownerPanel.document;
+    }else if (target.parentNode && target.parentNode.ownerPanel){ // script panel
+      doc = target.parentNode.ownerPanel.document;
     }
 
-    if (doc.location == 'chrome://firebug/content/panel.html'){
+    if (doc && doc.location == 'chrome://firebug/content/panel.html'){
       for each (node in doc.getElementsByClassName('panelNode')){
         var match = /.*\spanelNode-(\w+)\s.*/.exec(node.className);
         if (match && node.getAttribute('active') == 'true'){
