@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 - 2009 by Eric Van Dewoestine
+ * Copyright (c) 2008 - 2011 by Eric Van Dewoestine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -137,8 +137,7 @@ function Search() {
       search: function(query){
         var loc = window.content.document.location.toString();
         var domain = loc.replace(/(https?:\/\/.*?)\/.*/, '$1');
-        events.feedkeys(
-          ':open ' + domain + '/mail/#search/' + escape(query) + '<cr>');
+        liberator.open(domain + '/mail/#search/' + escape(query));
       }
     },
 
@@ -227,9 +226,9 @@ function Search() {
       }
 
       if (!url){
-        events.feedkeys(':open ' + defsearch + ' ' + site + ' ' + query + '<cr>');
+        liberator.open(defsearch + ' ' + site + ' ' + query);
       }else{
-        events.feedkeys(':open ' + url + escape(site + ' ' + query) + '<cr>');
+        liberator.open(url + escape(site + ' ' + query));
       }
     },
 
