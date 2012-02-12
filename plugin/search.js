@@ -65,7 +65,7 @@ function Search() {
   const searchDomains = {
     google: {
       urlPattern: /^www\.google\.com$/,
-      resultsPattern: /^http:\/\/www\.google\.com\/search|^http:\/\/(images|video|maps|news|groups|books|scholar|blogsearch)\.google\.com\/\1/,
+      resultsPattern: /^https?:\/\/www\.google\.com\/search|^http:\/\/(images|video|maps|news|groups|books|scholar|blogsearch)\.google\.com\/\1/,
 
       /**
        * Returns a list where the first element is the search url to use,
@@ -74,7 +74,7 @@ function Search() {
        */
       getSearchInfo: function(){
         var loc = window.content.document.location;
-        var url = 'http://' + loc.host + loc.pathname + '?q=';
+        var url = 'https://' + loc.host + loc.pathname + '?q=';
         var document = window.content.document;
         var form = document.forms[0];
         var value = null;
@@ -91,7 +91,7 @@ function Search() {
 
     yahoo: {
       urlPattern: /^search\.yahoo\.com$/,
-      resultsPattern: /^http:\/\/((images|video|news)\.)?search\.yahoo\.com\/search/,
+      resultsPattern: /^https?:\/\/((images|video|news)\.)?search\.yahoo\.com\/search/,
 
       /**
        * Returns a list where the first element is the search url to use,
