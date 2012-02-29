@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009 - 2010 by Eric Van Dewoestine
+ * Copyright (c) 2009 - 2012 by Eric Van Dewoestine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -44,12 +44,6 @@
  *   readabilityMargin (default: narrow):
  *     The margin size
  *
- *   readabilityBackground (default: #bbb):
- *     The background color
- *
- *   readabilityMargin (default: #333):
- *     The text color
- *
  * @version 0.1
  */
 
@@ -67,14 +61,6 @@ if (typeof(readabilitySize) === 'undefined'){
 
 if (typeof(readabilityMargin) === 'undefined'){
   readabilityMargin = "narrow";
-}
-
-if (typeof(readabilityBackground) === 'undefined'){
-  readabilityBackground = "#bbb";
-}
-
-if (typeof(readabilityColor) === 'undefined'){
-  readabilityColor = "#333";
 }
 
 commands.add(["readability"],
@@ -107,17 +93,6 @@ commands.add(["readability"],
       "    _readability_print_css.media='print';" +
       "    _readability_print_css.type='text/css';" +
       "    document.getElementsByTagName('head')[0].appendChild(_readability_print_css);" +
-
-      "    setTimeout(function(){" +
-      "      _readability_color=document.createElement('STYLE');" +
-      "      _readability_color.type='text/css';" +
-      "      rule=document.createTextNode('.style-" + readabilityStyle + " { " +
-      "        background-color: " + readabilityBackground + "; " +
-      "        color: " + readabilityColor + "; " +
-      "      }');" +
-      "      _readability_color.appendChild(rule);" +
-      "      document.getElementsByTagName('head')[0].appendChild(_readability_color);" +
-      "    }, 1000);" +
       "})();";
   }, {argCount: 0}
 );
