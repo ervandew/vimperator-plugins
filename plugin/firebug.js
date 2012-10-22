@@ -35,35 +35,77 @@
  */
 
 function FirebugVimperator(){
+  function Firebug(){
+    return window
+      .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+      .getInterface(Components.interfaces.nsIWebNavigation)
+      .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+      .rootTreeItem
+      .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+      .getInterface(Components.interfaces.nsIDOMWindow).Firebug;
+  }
+
+  function emenu(menu){
+      let items = Liberator.getMenuItems();
+      for (let [, item] in Iterator(items)) {
+          if (item.fullMenuPath == menu){
+              item.doCommand();
+              return;
+          }
+      }
+  }
+
   return {
     open: function(){
-      Firebug.toggleBar(true, 'console');
+      var firebug = Firebug();
+      if (firebug.toggleBar){
+        firebug.toggleBar(true, 'console');
+      }else{
+        emenu('View.Firebug');
+      }
     },
 
     off: function() {
-      Firebug.closeFirebug(true);
+      var firebug = Firebug();
+      if (firebug){
+        firebug.closeFirebug(true);
+      }
     },
 
     close: function(){
-      Firebug.minimizeBar();
+      var firebug = Firebug();
+      if (firebug){
+        firebug.minimizeBar();
+      }
     },
 
     toggle: function(){
-      Firebug.toggleBar();
+      var firebug = Firebug();
+      if (firebug.toggleBar){
+        firebug.toggleBar();
+      }else{
+        emenu('View.Firebug');
+      }
     },
 
     console_focus: function(){
-      fbv.open();
-      var commandLine = Firebug.largeCommandLine
-          ? Firebug.chrome.$("fbLargeCommandLine")
-          : Firebug.chrome.$("fbCommandLine");
-      setTimeout(function(){
-        commandLine.select();
-      }, 100);
+      var firebug = Firebug();
+      if (firebug){
+        fbv.open();
+        var commandLine = firebug.largeCommandLine
+            ? firebug.chrome.$("fbLargeCommandLine")
+            : firebug.chrome.$("fbCommandLine");
+        setTimeout(function(){
+          commandLine.select();
+        }, 100);
+      }
     },
 
     console_clear: function(){
-      Firebug.Console.clear();
+      var firebug = Firebug();
+      if (firebug){
+        firebug.Console.clear();
+      }
     },
 
     _execute: function(args){
