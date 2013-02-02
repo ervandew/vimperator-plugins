@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010 by Eric Van Dewoestine
+ * Copyright (c) 2010 - 2013 by Eric Van Dewoestine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -136,7 +136,7 @@ function LowLight() {
     if (style){
       style.parentNode.removeChild(style);
     }
-  };
+  }
 
   return {
     init: function(){
@@ -147,7 +147,7 @@ function LowLight() {
         '  primary key (host)' +
         ')'
       );
-      conn.close();
+      conn.asyncClose();
     },
 
     toggle: function(){
@@ -155,22 +155,23 @@ function LowLight() {
       var host = document.location.host;
       var style = document.getElementById('lowlight');
       var conn = connect();
+      var sql;
       try {
         if (style){
           unapply();
 
-          var sql = conn.createStatement('delete from lowlight where host = :host');
+          sql = conn.createStatement('delete from lowlight where host = :host');
           sql.params.host = host;
           sql.execute();
         } else {
           apply();
 
-          var sql = conn.createStatement('insert into lowlight (host) values (:host)');
+          sql = conn.createStatement('insert into lowlight (host) values (:host)');
           sql.params.host = host;
           sql.execute();
         }
       }finally{
-        conn.close();
+        conn.asyncClose();
       }
     },
 
@@ -193,11 +194,11 @@ function LowLight() {
         }else{
           unapply();
         }
-        sql.finalize()
+        sql.finalize();
       }catch(e){
         Firebug.Console.log(e);
       }finally{
-        conn.close();
+        conn.asyncClose();
       }
     }
   };
