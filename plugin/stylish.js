@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009 by Eric Van Dewoestine
+ * Copyright (c) 2009 - 2013 by Eric Van Dewoestine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -59,6 +59,10 @@ function StylishVimperator() {
   var popup = document.getElementById("stylish-popup");
   if (!popup){ // < stylish 1.0
     popup = document.getElementById("stylish-status-popup");
+  }
+
+  if (!popup){
+    return null;
   }
 
   popup.addEventListener('popupshown', popupshown, true);
@@ -167,9 +171,10 @@ function StylishVimperator() {
 }
 
 var sv = StylishVimperator();
-
-commands.addUserCommand(["stylish"],
-  "Execute stylish commands",
-  function(args) { sv._execute(args); },
-  { argCount: '1', completer: sv._completer }
-);
+if (sv) {
+  commands.addUserCommand(["stylish"],
+    "Execute stylish commands",
+    function(args) { sv._execute(args); },
+    { argCount: '1', completer: sv._completer }
+  );
+}
