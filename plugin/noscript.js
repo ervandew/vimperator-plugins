@@ -142,10 +142,10 @@ function NoscriptVimperator() {
       var commands = [];
       for (var name in nsv){
         if (name.indexOf('_') !== 0 && nsv.hasOwnProperty(name)){
-          commands.push(name);
+          commands.push([name,""]);
         }
       }
-      context.completions = [[c, ''] for each (c in commands)];
+      return [0,commands];
     }
   };
 }
@@ -156,6 +156,6 @@ if (typeof(noscriptOverlay) != 'undefined'){
   commands.addUserCommand(["nosc[ript]"],
     "Execute noscript commands",
     function(args) { nsv._execute(args); },
-    { argCount: '1', completer: nsv._completer }
+    { completer: nsv._completer }
   );
 }
