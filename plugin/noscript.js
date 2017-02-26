@@ -102,9 +102,7 @@ function NoscriptVimperator() {
     }
 
     if (keyCode){
-      var newEvent = window.document.createEvent('KeyboardEvent');
-      newEvent.initKeyEvent(
-        "keypress", true, true, null, false, false, false, false, keyCode, 0);
+      var newEvent = new KeyboardEvent("keydown", {keyCode: keyCode});
       popup.dispatchEvent(newEvent);
     }
   }
