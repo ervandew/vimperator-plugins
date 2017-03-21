@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010 - 2013 by Eric Van Dewoestine
+ * Copyright (c) 2010 - 2017 by Eric Van Dewoestine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -196,7 +196,7 @@ function LowLight() {
         }
         sql.finalize();
       }catch(e){
-        Firebug.Console.log(e);
+        window.console.log(e);
       }finally{
         conn.asyncClose();
       }
